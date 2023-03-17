@@ -1,0 +1,25 @@
+name: Build and Deploy SSAMI
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+      uses: actions/checkout@v3
+        
+      - name: Install and Build SSAMI
+        run: |
+          npm ci
+          npm run build-ghpage
+
+      - name: Deploy SSAMI to GH Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          git-config-name: matencio
+          git-config-email: mj.atencio@gmail.com
+          repository-name: matencio/ssami
+          token: ${{ secrets.ACCESS_TOKEN }}
+          branch: gh-pages # The branch the action should deploy to.
