@@ -1,0 +1,12 @@
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+.mat-expansion-panel-body {
+    padding: 0 15px 16px;
+}

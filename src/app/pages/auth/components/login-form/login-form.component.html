@@ -1,0 +1,24 @@
+<form class="form" [formGroup]="form" (ngSubmit)="login()">
+  <mat-form-field class="form__input" appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput placeholder="Email" type="email" formControlName="email" (input)="check()">
+    <mat-error *ngIf="hasError('email', 'required')" style="margin-bottom: 5px;">Por favor, ingrese su Email</mat-error>
+    <mat-error *ngIf="hasError('email', 'email') && !(hasError('email', 'required'))" style="margin-bottom: 5px;">Por favor, ingrese una dirección de Email válida</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="form__input" appearance="outline">
+    <mat-label>Contraseña</mat-label>
+    <input matInput placeholder="Password" type="password" formControlName="password" [type]="hide ? 'password' : 'text'" (input)="check()">
+    <button type="button" mat-icon-button matSuffix (click)="hide = !hide">
+      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+    <mat-error *ngIf="hasError('password', 'required')" style="margin-bottom: 5px;">Por favor, ingrese su Contraseña</mat-error>
+    <mat-error *ngIf="hasError('password', 'incorrect')" style="margin-bottom: 5px;">Los datos ingresados para Usuario y/o Contraseña no son válidos, por favor verifique</mat-error>
+  </mat-form-field>
+
+  <div class="form-actions" *ngIf="!isLoading" style="margin-top: 10px;">
+    <button class="form-actions__login" mat-raised-button style="width: 100%;" color="primary" type="submit" [disabled]="form.invalid">Iniciar Sesión</button>
+    <!--<button class="form-actions__forget" mat-button>Olvidé mi contraseña</button>-->
+  </div>
+  <mat-progress-bar mode="indeterminate" style=" margin-top: 10px;" *ngIf="isLoading"></mat-progress-bar>
+</form>

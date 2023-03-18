@@ -1,0 +1,24 @@
+.example-stepper {
+    margin-top: 8px;
+}
+  
+.mat-form-field {
+    width: 100%
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+}
+
+:ng-deep .mat-grid-tile-content{
+    justify-content: flex-start !important ;
+ }
+
+ .icon-status-success {
+    color: rgb(0, 163, 68) !important;
+  }
+  
+  .icon-status-error {
+    color: rgb(245, 36, 25) !important;
+  }

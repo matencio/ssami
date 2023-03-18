@@ -1,0 +1,92 @@
+<h2 mat-dialog-title class="mat-headline">Agregar Dosis Medicamento</h2>
+<mat-dialog-content>
+    <div mat-dialog-content>
+        <section>
+            <!--form-->
+            <form [formGroup]="dosisMedicamentoFormGroup" autocomplete="off">
+                <!-- Dosis -->
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Dosis</mat-label>
+                    <input matInput autocomplete="off" placeholder=" Dosis" (keypress)="numberOnly($event)"
+                        formControlName="dosis">
+                    <mat-error *ngIf=" hasError('dosis', 'required')" style="margin-bottom: 5px;">
+                        Por favor, Ingrese el valor para la <strong>Dosis</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Unidad Dosis -->
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Unidad</mat-label>
+                    <mat-select formControlName="unidad">
+                        <mat-option>Seleccione...</mat-option>
+                        <mat-option *ngFor="let unidad of unidadesList" [value]="unidad.id">
+                            {{unidad.descripcion}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="hasError('unidad', 'required')" style="margin-bottom: 5px;">
+                        Por favor, seleccione la <strong>Unidad</strong> de la Dosis
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Tipo Dosis -->
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Tipo Dosis</mat-label>
+                    <mat-select formControlName="tipoDosis">
+                        <mat-option>Seleccione...</mat-option>
+                        <mat-option *ngFor="let tipoDosis of tipoDeDosisList" [value]="tipoDosis.id">
+                            {{tipoDosis.descripcion}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="hasError('tipoDosis', 'required')" style="margin-bottom: 5px;">
+                        Por favor, seleccione el <strong>Tipo</strong> de la Dosis
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Frecuencia -->
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Frecuencias</mat-label>
+                    <mat-select formControlName="frecuencias" multiple> <!-- multiple [compareWith]="comparer"-->
+                        <mat-option *ngFor="let frecuencia of frecuenciasList" [value]="frecuencia.id" (onSelectionChange)="selectionTipo($event)">
+                            {{frecuencia.descripcion}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="hasError('frecuencias', 'required')" style="margin-bottom: 5px;">
+                        Por favor, seleccione al menos una <strong>Frecuencia</strong> posible para la Dosis
+                    </mat-error>
+                </mat-form-field>
+
+                <div *ngIf="showOtra">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Otra Frecuencia</mat-label>
+                        <input matInput autocomplete="off" placeholder="Ingrese otra Frecuencia"
+                            formControlName="otraFrecuencia">
+                        <mat-error *ngIf="hasError('otraFrecuencia','required')">
+                            Ingrese otra <strong>Frecuencia</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Vía de Administración -->
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Vía de Administración</mat-label>
+                    <mat-select formControlName="via">
+                        <mat-option>Seleccione...</mat-option>
+                        <mat-option *ngFor="let via of viaList" [value]="via.id">
+                            {{via.descripcion}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="hasError('via', 'required')" style="margin-bottom: 5px;">
+                        Por favor, seleccione una <strong>Vía de Administración</strong>
+                    </mat-error>
+                </mat-form-field>
+            </form>
+        </section>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button matDialogClose>{{'Cancelar' | uppercase}}</button>
+    <button mat-button cdkFocusInitial class="btn-ssami-primary" 
+        [disabled]="dosisMedicamentoFormGroup.invalid" 
+        (click)="agregarDosisMedicamento()">{{'Agregar' | uppercase}}</button>
+</mat-dialog-actions>

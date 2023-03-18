@@ -1,0 +1,253 @@
+<h2 mat-dialog-title class="mat-headline">Estudio Complementario</h2>
+<mat-dialog-content>
+    <div mat-dialog-content>
+        <form [formGroup]="estudioComplementarioFormGroup" autocomplete="off">
+            <!-- Fecha -->
+            <mat-form-field appearance="outline">
+                <mat-label>Fecha</mat-label>
+                <input matInput [max]="maxDate" [matDatepicker]="fecha" placeholder="Fecha" formControlName="fecha">
+                <mat-hint>DD/MM/AAAA</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="fecha"></mat-datepicker-toggle>
+                <mat-datepicker #fecha></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Origen</mat-label>
+                <mat-select formControlName="origen">
+                    <mat-option>Seleccione...</mat-option>
+                    <mat-option *ngFor="let origen of origenList" [value]="origen">
+                        {{origen}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasError('origen','required')">
+                    Ingrese el <strong>Origen</strong>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Tipo de Estudio Complementario</mat-label>
+                <mat-select formControlName="estudioComplementario" (selectionChange)="selectionTipoEstudioComplementario($event.value)">
+                    <mat-option>Seleccione...</mat-option>
+                    <mat-option *ngFor="let estudioComplementario of estudioComplementarioList" [value]="estudioComplementario">
+                        {{estudioComplementario}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasError('estudioComplementario','required')">
+                    Ingrese el <strong>Tipo de Estudio Complementario</strong>
+                </mat-error>
+            </mat-form-field>
+    
+            <!-- PCR Section -->
+            <div *ngIf="('PCR' == selectedEstudio)">
+                <mat-form-field appearance="outline">
+                    <mat-label>Resultado PCR</mat-label>
+                    <input matInput placeholder="Resultado PCR" type="number" min="0" max="500"
+                        (keypress)="numberOnly($event)" formControlName="resultadoPCR">
+                    <mat-error *ngIf="hasError('resultadoPCR','required')">
+                        Ingrese el <strong>Resultado PCR</strong>
+                    </mat-error>
+                    <mat-error *ngIf="hasError('resultadoPCR','min') || hasError('resultadoPCR','max')">
+                        Ingrese un valor entre <strong>0 y 500</strong>
+                    </mat-error>
+                </mat-form-field>
+                
+                <section>
+                  <label>Tomar valor:</label>
+                  <mat-radio-group formControlName="tomarValor">
+                    <mat-radio-button color="primary" value="true" style="padding-left: 10px;">Positivo</mat-radio-button>
+                    <mat-radio-button color="primary" value="false" style="padding-left: 10px;">Negativo</mat-radio-button>
+                  </mat-radio-group>
+                </section>
+                <mat-error *ngIf="hasError('tomarValor','required')">
+                    <strong>Seleccione</strong> el tipo de valor
+                </mat-error>
+            </div>
+
+            <!-- Serología Section -->
+            <div *ngIf="('Serología' == selectedEstudio)">
+                <mat-form-field appearance="outline">
+                    <mat-label>Tipo de Serología</mat-label>
+                    <mat-select formControlName="tipo" (selectionChange)="selectionTipo($event.value)">
+                        <mat-option>Seleccione...</mat-option>
+                        <mat-option *ngFor="let tipo of serologiaList" [value]="tipo">
+                            {{tipo}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="hasError('tipo','required')">
+                        Ingrese el <strong>Tipo de Serología</strong>
+                    </mat-error>
+                </mat-form-field>
+                
+                <div *ngIf="showOtras">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Otras</mat-label>
+                        <input matInput autocomplete="off" placeholder="Otras"
+                            formControlName="otro">
+                        <mat-error *ngIf="hasError('otro','required')">
+                            Ingrese otras <strong>Serologías</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                
+                <section>
+                  <label>Resultado:</label>
+                  <mat-radio-group formControlName="tomarValor">
+                    <mat-radio-button value="true" style="padding-left: 10px;">Positivo</mat-radio-button>
+                    <mat-radio-button value="false" style="padding-left: 10px;">Negativo</mat-radio-button>
+                  </mat-radio-group>
+                </section>
+                <mat-error *ngIf="hasError('tomarValor','required')">
+                    <strong>Seleccione</strong> el tipo de resultado
+                </mat-error>
+            </div>
+
+            <!-- Química Section -->
+            <div *ngIf="('Química' == selectedEstudio)">
+                <mat-form-field appearance="outline">
+                    <mat-label>Tipo de Química</mat-label>
+                    <mat-select formControlName="tipo" (selectionChange)="selectionTipo($event.value)">
+                        <mat-option>Seleccione...</mat-option>
+                        <mat-option *ngFor="let tipo of serologiaList" [value]="tipo">
+                            {{tipo}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="hasError('tipo','required')">
+                        Ingrese el <strong>Tipo de Serología</strong>
+                    </mat-error>
+                </mat-form-field>
+                
+                <div *ngIf="showOtras">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Otras</mat-label>
+                        <input matInput autocomplete="off" placeholder="Otras"
+                            formControlName="otro">
+                        <mat-error *ngIf="hasError('otro','required')">
+                            Ingrese otras <strong>Serologías</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                
+                <section>
+                  <label>Resultado:</label>
+                  <mat-radio-group formControlName="tomarValor">
+                    <mat-radio-button value="true" style="padding-left: 10px;">Positivo</mat-radio-button>
+                    <mat-radio-button value="false" style="padding-left: 10px;">Negativo</mat-radio-button>
+                  </mat-radio-group>
+                </section>
+                <mat-error *ngIf="hasError('tomarValor','required')">
+                    <strong>Seleccione</strong> el tipo de resultado
+                </mat-error>
+            </div>
+
+            <!-- Hemograma Section -->
+            <div *ngIf="('Hemograma' == selectedEstudio)">
+                <mat-form-field appearance="outline">
+                    <mat-label>Glóbulos Rojos</mat-label>
+                    <input matInput placeholder="Glóbulos Rojos" type="number" min="0" max="100"
+                        (keypress)="numberOnly($event)" formControlName="globulosRojos">
+                    <mat-error *ngIf="hasError('globulosRojos','required')">
+                        Ingrese el valor de <strong>Glóbulos Rojos</strong>
+                    </mat-error>
+                    <mat-error *ngIf="hasError('globulosRojos','min') || hasError('globulosBlancos','max')">
+                        Ingrese un valor entre <strong>0 y 100</strong>
+                    </mat-error>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                    <mat-label>Glóbulos Blancos</mat-label>
+                    <input matInput placeholder="Glóbulos Blancos" type="number" min="0" max="100"
+                        (keypress)="numberOnly($event)" formControlName="globulosBlancos">
+                    <mat-error *ngIf="hasError('globulosBlancos','required')">
+                        Ingrese el valor de <strong>Glóbulos Blancos</strong>
+                    </mat-error>
+                    <mat-error *ngIf="hasError('globulosBlancos','min') || hasError('globulosBlancos','max')">
+                        Ingrese un valor entre <strong>0 y 100</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>HTO</mat-label>
+                    <input matInput placeholder="HTO" type="number" min="0" max="100"
+                        (keypress)="numberOnly($event)" formControlName="hto">
+                        <mat-error *ngIf="hasError('hto','required')">
+                            Ingrese el valor de <strong>HTO</strong>
+                        </mat-error>
+                        <mat-error *ngIf="hasError('hto','min') || hasError('hto','max')">
+                            Ingrese un valor entre <strong>0 y 100</strong>
+                        </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>HB</mat-label>
+                    <input matInput placeholder="HB" type="number" min="0" max="100"
+                        (keypress)="numberOnly($event)" formControlName="hb">
+                        <mat-error *ngIf="hasError('hb','required')">
+                            Ingrese el valor de <strong>HB</strong>
+                        </mat-error>
+                        <mat-error *ngIf="hasError('hb','min') || hasError('hb','max')">
+                            Ingrese un valor entre <strong>0 y 100</strong>
+                        </mat-error>
+                </mat-form-field>
+
+                <section>
+                    <label>Resultado:</label>
+                    <mat-radio-group formControlName="tomarValor">
+                      <mat-radio-button value="true" style="padding-left: 10px;">Normal</mat-radio-button>
+                      <mat-radio-button value="false" style="padding-left: 10px;">Alterado</mat-radio-button>
+                    </mat-radio-group>
+                  </section>
+                  <mat-error *ngIf="hasError('tomarValor','required')">
+                      <strong>Seleccione</strong> el tipo de resultado
+                  </mat-error>
+            </div>
+
+            <!-- Coagulograma Section -->
+            <div *ngIf="('Coagulograma' == selectedEstudio)">
+                <mat-form-field appearance="outline">
+                    <mat-label>P (%)</mat-label>
+                    <input matInput placeholder="P (%)" type="number" min="70" max="100"
+                        (keypress)="numberOnly($event)" formControlName="p">
+                    <mat-error *ngIf="hasError('p','min') || hasError('p','max')">
+                        Ingrese un valor entre <strong>70 y 100 (%)</strong>
+                    </mat-error>
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline">
+                    <mat-label>KPTT</mat-label>
+                    <input matInput placeholder="KPTT (Segundos)" type="number" min="24" max="32"
+                        (keypress)="numberOnly($event)" formControlName="kptt">
+                    <mat-error *ngIf="hasError('kptt','min') || hasError('kptt','max')">
+                        Ingrese un valor entre <strong>24 y 32 (Segundos)</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Plaquetas (K)</mat-label>
+                    <input matInput placeholder="Plaquetas (K)" type="number" min="150" max="450"
+                        (keypress)="numberOnly($event)" formControlName="plaquetas">
+                    <mat-error *ngIf="hasError('plaquetas','min') || hasError('plaquetas','max')">
+                        Ingrese un valor entre <strong>150 y 450 (K)</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <section>
+                    <label>Interpretación:</label>
+                    <mat-radio-group formControlName="tomarValor">
+                      <mat-radio-button value="true" style="padding-left: 10px;">Normal</mat-radio-button>
+                      <mat-radio-button value="false" style="padding-left: 10px;">Alterado</mat-radio-button>
+                    </mat-radio-group>
+                  </section>
+                  <mat-error *ngIf="hasError('tomarValor','required')">
+                      <strong>Seleccione</strong> el tipo de Interpretación
+                  </mat-error>
+            </div>
+
+        </form>
+    </div>
+</mat-dialog-content>
+
+<div mat-dialog-actions align="end">
+    <button mat-button matDialogClose="yes">{{'Cancelar' | uppercase}}</button> <!--(click)="onNoClick()"-->
+    <!--[disabled]="!(estudioComplementarioFormGroup.valid)"--> <!--disableBtn()-->
+    <button mat-button cdkFocusInitial class="btn-ssami-primary" (click)="agregarEstudio()" [disabled]="estudioComplementarioFormGroup.invalid">{{'Agregar' | uppercase}}</button> <!--[mat-dialog-close]="data" -->
+</div>
