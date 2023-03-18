@@ -1,0 +1,62 @@
+<h2 mat-dialog-title class="mat-headline">Calculadora de Dosis</h2>
+<mat-dialog-content style="padding-top: 15px;">
+    <div mat-dialog-content>
+        <form [formGroup]="calculadoraFormGroup" autocomplete="off">
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Peso</mat-label>
+                <input matInput autocomplete="off" placeholder="Peso del Paciente" (keypress)="numberOnly($event)"
+                    formControlName="peso">
+                <mat-error *ngIf=" hasError('peso', 'required' )" style="margin-bottom: 5px;">
+                    Por favor, Ingrese el <strong>Peso</strong>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Tipo de Medicamento</mat-label>
+                <mat-select formControlName="tipo" disabled>
+                    <mat-option>Seleccione...</mat-option>
+                    <mat-option *ngFor="let tipo of tipoList" [value]="tipo">
+                        {{tipo}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf=" hasError('tipo', 'required' )" style="margin-bottom: 5px;">
+                    Por favor, seleccione el <strong>Tipo de Medicamento</strong>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Medicamento</mat-label>
+                <input type="text" matInput [matAutocomplete]="auto" placeholder="Ingrese Código ó Descripción"    
+                    formControlName="medicamento" id="medicamento" name="medicamento"> 
+                <mat-error *ngIf="hasError('medicamento', 'required')">Seleccione una <strong>Medicamento</strong></mat-error>
+                <mat-error *ngIf="hasError('medicamento', 'listNotContainstMedicamento')" style="margin-bottom: 5px;">
+                    Seleccione un <strong>Medicamento</strong> de la lista
+                </mat-error>
+                <mat-autocomplete #auto="matAutocomplete" panelWidth="panelWidth">
+                    <mat-option *ngIf="loading" class="is-loading" style="width: 100%;">
+                        <mat-spinner diameter="50"></mat-spinner>
+                    </mat-option>
+                    <mat-option *ngIf="noDataToDisplay">
+                        No se encontraron Medicamentos para los valores ingresados...
+                    </mat-option>
+                    <mat-option *ngFor="let medicamento of filteredOptions | async" [value]="medicamento"
+                        class="custom-mat-option">
+                        {{medicamento}}
+                    </mat-option></mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Indicación</mat-label>
+                <textarea matInput placeholder="Ingrese la Indicación..."
+                    formControlName="indicacion" rows="6"></textarea>
+                <mat-error *ngIf=" hasError('indicacion', 'required' )" style="margin-bottom: 5px;">
+                    Por favor, Ingrese la <strong>Indicación Médica</strong>
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button matDialogClose>{{'Cerrar' | uppercase}}</button>
+    <button mat-button class="btn-ssami-primary" (click)="usarDosisCalculada()">{{'Usar Dosis Calculada' | uppercase}}</button>
+</mat-dialog-actions>

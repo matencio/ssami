@@ -1,0 +1,179 @@
+<h2 matDialogTitle class="mat-headline">Indicaciones Médicas</h2>
+<mat-dialog-content style="padding-top: 15px;">
+    <p><b>Cama:</b> {{data.nroCama}} </p>
+    <p><b>Paciente:</b> {{data.Paciente.nombre}} {{data.Paciente.apellido}} </p>
+    <p><b>Edad:</b> {{displayAge(data.Paciente.fechaNacimiento)}} </p>
+    <p><b>Peso:</b> {{data.Paciente.Internacions[0].peso}} Kg</p>
+    <p><b>Diagnóstico:</b> {{data.Paciente.Internacions[0].diagnostico}} </p>
+    <div style="padding: 5px;" >
+        <mat-accordion>
+            <mat-expansion-panel (opened)="panelOpenState = true; focusOnBtn()" (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <b>Listado de Indicaciones Médicas</b>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        <div *ngIf="!(dataSource && dataSource.data && dataSource.data.length > 0)">
+                            No hay Indicaciones Médicas para mostrar
+                        </div>
+                        <div *ngIf="(dataSource && dataSource.data && dataSource.data.length > 0)">
+                            Últimas Indicaciones Médicas
+                        </div>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <mat-progress-bar mode="indeterminate" *ngIf="loadingIndicaciones"></mat-progress-bar>
+
+                <div *ngIf="!loadingIndicaciones">
+                    <div style="text-align: center;"
+                        *ngIf="!(dataSource && dataSource.data && dataSource.data.length > 0)">
+                        <p>No hay Indicaciones Médicas</p>
+                    </div>
+    
+                    <div style="padding-top: 10px; overflow-x: scroll;"
+                        *ngIf="(dataSource && dataSource.data && dataSource.data.length > 0)">
+    
+                        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+                            <!-- Indicación Column  -->
+                            <ng-container matColumnDef="indicacion">
+                                <th mat-header-cell *matHeaderCellDef> {{ 'Indicación' | uppercase }} </th>
+                                <td mat-cell *matCellDef="let element" style="padding-left: 10px; padding-right: 10px;"> {{element.indicacion}}
+                                </td>
+                            </ng-container> 
+
+                            <!-- Estado Column  -->
+                            <ng-container matColumnDef="estado">
+                                <th mat-header-cell *matHeaderCellDef> {{ 'Estado' | uppercase }} </th>
+                                <td mat-cell *matCellDef="let element" style="padding-right: 10px;">
+                                    <div class="chip-data success-state" *ngIf="!(element.fechaFin)">{{ 'Activa' | uppercase }}</div>
+                                    <div class="chip-data error-state" *ngIf="element.fechaFin">{{ 'Finalizada' | uppercase }}</div>
+                                </td>
+                            </ng-container> 
+
+                            <!-- Fecha Inicio Column -->
+                            <ng-container matColumnDef="fechaInicio">
+                                <th mat-header-cell *matHeaderCellDef style="text-align: center;"> {{ 'Fecha Inicio' | uppercase }} </th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center; padding-right: 10px;"> {{element.fechaInicio | date: 'dd/MM/yyyy'}} </td>
+                            </ng-container>
+
+                            <!-- Fecha Fin Column -->
+                            <ng-container matColumnDef="fechaFin">
+                                <th mat-header-cell *matHeaderCellDef style="text-align: center;"> {{ 'Fecha Fin' | uppercase }} </th>
+                                <td mat-cell *matCellDef="let element" style="text-align: center; padding-right: 10px;"> {{element.fechaFin | date: 'dd/MM/yyyy'}} </td>
+                            </ng-container>
+
+                            <!--detalles column -->
+                            <ng-container matColumnDef="actions" stickyEnd>
+                                <th mat-header-cell *matHeaderCellDef style="text-align: center;"> {{ 'detalles' | uppercase }} </th>
+                                <td mat-cell *matCellDef="let element" style="padding-left: 10px; text-align: center;">
+                                    <button class="settings-button" mat-icon-button [matMenuTriggerFor]="menu">
+                                        <mat-icon class="settings-button__icon">more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <button mat-menu-item (click)="verIndicacion(element)">
+                                            <span>Ver</span>
+                                        </button>
+                                        <button mat-menu-item [disabled]="(element.fechaFin != null)" (click)="editarIndicacion(element)">
+                                            <span>Editar</span>
+                                        </button>
+                                        <button mat-menu-item [disabled]="(element.fechaFin != null)" (click)="eliminarIndicacion(element)">
+                                            <span>Finalizar</span>
+                                        </button>
+                                    </mat-menu>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="pagination">
+                    <mat-paginator [pageSizeOptions]="[5, 15, 25]" showFirstLastButtons></mat-paginator>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button matDialogClose>{{'Cerrar' | uppercase}}</button>
+    <button mat-button class="btn-ssami-primary" (click)="generarIndicacion()">{{'Generar Indicación' | uppercase}}</button>
+</mat-dialog-actions>
+
+<!-- FINALIZAR INDICACION SECTION -->
+<ng-template #finalizarIndicacionDialog let-data>
+    <h2 matDialogTitle class="mat-headline">Finalizar Indicación Médica</h2>
+    <mat-dialog-content>
+      <p><strong>Atención: </strong> ¿Está seguro que desea finalizar la Indicación Médica?</p>
+      <br>
+      <p><b>Fecha de Inicio:</b> {{data.fechaInicio | date: 'dd/MM/yyyy'}} </p>
+      <p><b>Indicación:</b> {{data.indicacion}} </p>
+      <br>
+    <div>
+        <form [formGroup]="finalizarFormGroup" autocomplete="off">
+            <!-- Fecha de Finalización -->
+            <mat-form-field appearance="outline">
+                <mat-label>Fecha de Finalización</mat-label>
+                <input matInput autocomplete="off" [matDatepicker]="fechaFin2" 
+                formControlName="fechaFin" placeholder="Fecha de Finalización">
+                <mat-hint>DD/MM/AAAA</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="fechaFin2">
+                </mat-datepicker-toggle>
+                <mat-datepicker #fechaFin2></mat-datepicker>
+                <mat-error *ngIf=" hasError('fechaFin', 'required' )" style="margin-bottom: 5px;">
+                    Por favor, ingrese la <strong>Fecha de Finalización</strong>
+                </mat-error>
+            </mat-form-field>
+            <!-- Motivo -->
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Motivo</mat-label>
+                <textarea matInput placeholder="Ingrese el Motivo de finalización..." 
+                formControlName="motivo" rows="6"></textarea>
+                <mat-error *ngIf=" hasError('motivo', 'required' )" style="margin-bottom: 5px;">
+                    Por favor, Ingrese el <strong>Motivo</strong> de finalización
+                </mat-error>
+            </mat-form-field>
+        </form>
+    </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button matDialogClose>NO</button><!---->
+      <button mat-button [disabled]="finalizarFormGroup.invalid" class="btn-ssami-primary" matDialogClose="yes" (click)="applyAlta(data)">SI</button>
+    </mat-dialog-actions>
+  </ng-template>
+
+<!-- VER DETALLE SECTION  -->
+<ng-template #verDetalleDialog let-data>
+    <h2 matDialogTitle class="mat-headline">Detalles de la Indicación Médica</h2>
+    <mat-dialog-content style="padding-top: 15px;">
+        <h4 class="mat-title">Paciente</h4>
+        <div style="padding: 10px;">
+            <p><b>Cama:</b> {{data.nroCama}} </p>
+            <p><b>Paciente:</b> {{data.nombre}} {{data.apellido}} </p>
+            <p><b>Edad:</b> {{displayAge(data.fechaNacimiento)}} </p>
+            <p><b>Diagnóstico de Internación:</b> {{data.diagnosticoInternacion}} </p>
+        </div>
+
+        <h4 class="mat-title" style="display: inline-flex;">
+            Indicación
+            <div style="margin-left: 10px;">
+                <div class="chip-data success-state" *ngIf="!(data.fechaFin)">{{ 'Activa' | uppercase }}</div>
+                <div class="chip-data error-state" *ngIf="data.fechaFin">{{ 'Finalizada' | uppercase }}</div>
+            </div>
+        </h4>
+        <div style="padding: 10px;">
+            <p><b>Fecha de Inicio:</b> {{data.fechaInicio | date: 'dd/MM/yyyy'}} </p>
+            <p *ngIf="data.fechaFin"><b>Fecha de Fin:</b> {{data.fechaFin | date: 'dd/MM/yyyy'}} </p>
+            <p *ngIf="data.motivo"><b>Motivo de Finalización:</b> {{data.motivo}} </p>
+            <p><b>Peso (al momento de la indicación):</b> {{data.peso}} Kg</p>
+            <p><b>Medicamento:</b>{{data.medicamento}}</p>
+            <p><b>Indicación:</b> {{data.indicacion}} </p>
+            <p *ngIf="data.diagnostico && data.diagnostico.length > 0"><b>Diagnóstico de Indicación:</b> {{data.diagnostico}} </p>
+            <p *ngIf="data.notaMedica && data.notaMedica.length > 0"><b>Nota Médica:</b> {{data.notaMedica}} </p>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button matDialogClose class="cancelar">CERRAR</button>
+        <button mat-button class="btn-ssami-primary" *ngIf="!data.fechaFin" (click)="eliminarIndicacion(data)" [disabled]="data.fechaFin">{{'Finalizar Indicación' |
+            uppercase}}</button>
+    </mat-dialog-actions>
+</ng-template>

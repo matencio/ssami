@@ -1,0 +1,90 @@
+<app-layout>
+    <div class="container">
+        <mat-toolbar class="page-header" role="heading">
+            <h1>Medicamentos</h1>
+            <button mat-flat-button class="btn-ssami-primary" (click)="createMedicamento()">{{ 'crear' | uppercase }}</button>
+        </mat-toolbar>
+
+        <div class="tables-wrapper">
+            <!-- Tabla -->
+            <mat-card class="employee-table-wrapper">
+                <mat-card-title class="employee-table-wrapper__header" style="flex-wrap: wrap;">
+                    <!-- Title + Search -->
+                    <div class="employee-table-wrapper__title" style="padding-right: 50px;">
+                        Listado de Medicamentos
+                    </div>
+                    <div style="padding: 10px; flex-grow: 1;">
+                        <div *ngIf="!isShowFilterInput" style="display: flex; justify-content: end;">
+                            <button class="employee-table-wrapper__button" mat-mini-fab (click)="showFilterInput()">
+                                <mat-icon class="employee-table-wrapper__icon">search</mat-icon>
+                            </button>
+                        </div>
+                        <div *ngIf="isShowFilterInput" style="display: flex;">
+                            <input #search matInput class="employee-table-wrapper__search-input"
+                                style="width: 100%; place-items: flex-end;" placeholder="Filtrar..."
+                                (keyup)="applyFilter($event)"
+                                > <!--(keyup)="applyFilter($event)"-->
+                            <button class="employee-table-wrapper__button" matSuffix mat-icon-button
+                                (click)="showFilterInput()">
+                                <mat-icon class="employee-table-wrapper__icon">close</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </mat-card-title>
+                <mat-card-content class="employee-table__content">
+                    <mat-progress-bar mode="indeterminate" *ngIf="isLoading"></mat-progress-bar>
+                    <table class="employee-table__table" mat-table [dataSource]="dataSource"
+                        [ngClass]="isLoading ? 'is-loading-card' : ''">
+                        <!-- Medicamento Column -->
+                        <ng-container matColumnDef="nombre">
+                            <th class="employee-table__table-header" mat-header-cell *matHeaderCellDef> {{ 'Medicamento' |
+                                uppercase }} </th>
+                            <td class="employee-table__table-body" mat-cell *matCellDef="let element"> {{element.nombre | uppercase}}
+                            </td>
+                        </ng-container>
+
+                        <!-- Tipo de Medicamento Column -->
+                        <ng-container matColumnDef="tipo">
+                            <th class="employee-table__table-header" mat-header-cell *matHeaderCellDef> {{ 'Tipo de Medicamento' |
+                                uppercase }} </th>
+                            <td class="employee-table__table-body" mat-cell *matCellDef="let element">
+                                {{ getTipoMedicamentoDescripcion(element.TipoMedicamentoId) | uppercase }}
+                            </td>
+                        </ng-container>
+
+                        <!-- Acciones -->
+                        <ng-container matColumnDef="actions" stickyEnd>
+                            <th class="employee-table__table-header" mat-header-cell *matHeaderCellDef> {{ 'Acciones' |
+                                uppercase }} </th>
+                            <td class="employee-table__table-body" mat-cell *matCellDef="let element">
+                                <button class="settings-button" mat-icon-button [matMenuTriggerFor]="settings">
+                                    <mat-icon class="settings-button__icon">more_vert</mat-icon>
+                                </button>
+                                <div class="settings-menu">
+                                    <mat-menu #settings="matMenu" xPosition="before">
+                                        <button class="settings-menu__item" mat-menu-item
+                                            (click)="verMedicamento(element)">Ver</button>
+                                        <button class="settings-menu__item" mat-menu-item
+                                            (click)="editarMedicamento(element)">Editar</button>
+                                    </mat-menu>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+                        </tr>
+                    </table>
+                    <div *ngIf="!(dataSource && dataSource.data && dataSource.data.length > 0)"
+                        style="width: 100%; text-align: center; margin-top: 10px;">
+                        <b>No hay datos de Medicamentos para mostrar</b>
+                    </div>
+                </mat-card-content>
+                <div class="pagination">
+                    <mat-paginator [pageSizeOptions]="[5, 15, 25, 50]" showFirstLastButtons></mat-paginator>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <app-footer></app-footer>
+</app-layout>

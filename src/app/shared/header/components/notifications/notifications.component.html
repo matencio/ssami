@@ -1,0 +1,17 @@
+<button class="notification-button" mat-mini-fab [matMenuTriggerFor]="bell" (click)="openNotification()">
+  <mat-icon [matBadge]="notificacions"[matBadgeHidden]="!(notificacions && notificacions > 0)" matBadgeColor="warn" class="notification-button__icon">notifications_none</mat-icon>
+</button>
+<mat-menu #bell="matMenu" xPosition="before" class="notification-menu">
+  <button mat-menu-item class="notification-menu__button">
+    <mat-icon class="notification-menu__icon_yellow">local_offer</mat-icon>Notificación 1
+  </button>
+  <button mat-menu-item class="notification-menu__button">
+    <mat-icon class="notification-menu__icon_green">thumb_up</mat-icon>Notificación 2
+  </button>
+  <button mat-menu-item class="notification-menu__button">
+    <mat-icon class="notification-menu__icon_pink">notifications_none</mat-icon>Notificación 3
+  </button>
+  <button mat-menu-item class="notification-menu__button">
+    <mat-icon class="notification-menu__icon_blue">local_grocery_store</mat-icon>Notificación 4
+  </button>
+</mat-menu>

@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>Crear Paciente</h2>
+<mat-dialog-content>
+    <div mat-dialog-content>
+        <!-- Formulario -->
+        <div style="width: 100%;">
+            <mat-grid-list [cols]="breakpoint" gutterSize="10px" rowHeight="80px" (window:resize)="onResize($event)">
+                <mat-grid-tile [colspan]="(breakpoint > 2 ? 2 : breakpoint)" rowspan="1">
+                    <mat-form-field appearance="outline">
+                        <mat-label>N° Cama</mat-label>
+                        <input matInput placeholder="N° Cama">
+                        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                        <mat-hint>Ingrese N° de Cama</mat-hint>
+                      </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="(breakpoint > 2 ? 2 : breakpoint)" rowspan="1">
+                    <mat-form-field appearance="outline">
+                        <mat-label>ID Internación</mat-label>
+                        <input matInput placeholder="ID Internación">
+                        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                        <mat-hint>Ingrese ID de Internación</mat-hint>
+                      </mat-form-field>
+                </mat-grid-tile>
+    
+                <mat-grid-tile [colspan]="breakpoint" rowspan="1">
+                    <mat-form-field appearance="outline">
+                        <mat-label>D.N.I</mat-label>
+                        <input matInput placeholder="D.N.I">
+                        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                        <mat-hint>Ingrese número de D.N.I</mat-hint>
+                      </mat-form-field>
+                </mat-grid-tile>
+
+                <mat-grid-tile [colspan]="(breakpoint > 2 ? 2 : breakpoint)" rowspan="1">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput placeholder="Nombre">
+                        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                        <mat-hint>Ingrese Nombre</mat-hint>
+                      </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="(breakpoint > 2 ? 2 : breakpoint)" rowspan="1">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Apellido</mat-label>
+                        <input matInput placeholder="Apellido">
+                        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                        <mat-hint>Ingrese Apellido</mat-hint>
+                      </mat-form-field>
+                </mat-grid-tile>
+
+                <mat-grid-tile [colspan]="(breakpoint > 2 ? 2 : breakpoint)" rowspan="1">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Estado</mat-label>
+                        <mat-select>
+                            <mat-option value="option1">Internado</mat-option>
+                            <mat-option value="option2">Alta</mat-option>
+                            <mat-option value="option3">Otro</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="(breakpoint > 2 ? 2 : breakpoint)" rowspan="1">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Terrible Herramienta</mat-label>
+                        <input matInput placeholder="Terrible Herramienta">
+                        <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+                        <mat-hint>Terrible Herramienta</mat-hint>
+                      </mat-form-field>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<div mat-dialog-actions align="end">
+  <button mat-button matDialogClose="yes">Cancelar</button> <!--(click)="onNoClick()"-->
+  <button mat-button cdkFocusInitial class="btn-ssami-primary">Aceptar</button> <!--[mat-dialog-close]="data" -->
+</div>

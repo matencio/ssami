@@ -1,0 +1,38 @@
+.mat-form-field {
+    width: 100%
+}
+
+div#lightboxOverlay {
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.example-tab-icon {
+  margin-right: 8px;
+}
+
+::ng-deep mat-tab-header .mat-tab-label, .mat-tab-link {
+  width: unset !important;
+}
+
+.mat-tab-label-content {
+  white-space: normal !important;
+  text-overflow: ellipsis !important;
+}
+
+.mat-tab-label .mat-tab-label-content {
+  white-space: normal !important;
+  text-overflow: ellipsis !important;
+}
+
+.mic {
+  cursor: pointer !important;
+  font-size: 28px; 
+  border: 3px solid #203864; 
+  border-radius: 25px;
+}
+
+.mat-icon {
+  padding-right: 0px !important;
+  padding-bottom: 0px !important;
+}
